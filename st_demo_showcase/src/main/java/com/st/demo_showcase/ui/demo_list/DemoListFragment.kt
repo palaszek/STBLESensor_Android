@@ -15,12 +15,16 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.fragment.findNavController
+import com.st.blue_sdk.models.Boards
 import com.st.demo_showcase.ui.DemoShowCaseViewModel
 import com.st.demo_showcase.ui.composable.DemoListScreen
 import com.st.ui.composables.JSON_FILE_TYPE
@@ -67,6 +71,7 @@ class DemoListFragment : Fragment() {
                         emptyList()
                     )
 
+                    var didNavigateToWesu by rememberSaveable { mutableStateOf(false) }
                     val isBeta by viewModel.isBeta.collectAsStateWithLifecycle()
 
                     val fwUpdateAvailable by viewModel.fwUpdateAvailable.collectAsStateWithLifecycle()
@@ -80,6 +85,20 @@ class DemoListFragment : Fragment() {
                     ) { fileUri ->
                         if (fileUri != null) {
                             viewModel.setDtmiModel(nodeId, fileUri)
+                        }
+                    }
+
+                    LaunchedEffect(device, nodeId) {
+                        if (!didNavigateToWesu &&
+                            device?.boardType == Boards.Model.STEVAL_WESU1 &&
+                            nodeId.isNotEmpty()
+                        ) {
+                            didNavigateToWesu = true
+                            findNavController().navigate(
+                                DemoListFragmentDirections.actionDemoListToWesuOverviewFragment(
+                                    nodeId
+                                )
+                            )
                         }
                     }
 
