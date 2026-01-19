@@ -43,4 +43,11 @@
     <string name="st_demoShowcase_validDTMI">Valid DTMI</string>
     <string name="st_demoShowcase_customDTMI">Custom DTMI</string>
     <string name="st_demoShowcase_DTMI_notpresent">DTMI not present</string>
+    <string name="st_wesu_overview_steps_title">Kroki</string>
+    <string name="st_wesu_overview_steps_value">%1$d</string>
+    <string name="st_wesu_overview_fall_title">Upadek</string>
+    <string name="st_wesu_overview_fall_detected">Wykryto upadek</string>
+    <string name="st_wesu_overview_fall_none">Brak upadku</string>
+    <string name="st_wesu_overview_ok_button">Jestem w porządku</string>
+    <string name="st_wesu_overview_help_button">Wezwij pomoc!</string>
 </resources>

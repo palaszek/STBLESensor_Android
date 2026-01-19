@@ -435,6 +435,11 @@ class DemoShowCaseViewModel @Inject constructor(
             buildDemoList.removeAll(match.toSet())
         }
 
+        if (boardType == Boards.Model.STEVAL_WESU1) {
+            val allowedDemos = setOf(Demo.PedometerDemo, Demo.AccelerationEventDemo)
+            buildDemoList.retainAll(allowedDemos)
+        }
+
         //Remove the PnP-L, HighSpeedDataLog and BinaryContent Demo if there is not a valid DTMI
 //        if((_statusModelDTMI.value==DTMIModelLoadedStatus.CustomNotLoaded) || (_statusModelDTMI.value==DTMIModelLoadedStatus.NotNecessary)) {
 //            val match =
