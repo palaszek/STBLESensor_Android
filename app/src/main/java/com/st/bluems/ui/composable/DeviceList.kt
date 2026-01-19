@@ -296,6 +296,9 @@ fun DeviceListWithPermissionsCheck(
     onAddCatalogEntryFromFile: (Uri) -> Unit
 ) {
     val context = LocalContext.current
+    val wesu1Devices = remember(devices) {
+        devices.filter(::isWesu1Node)
+    }
 
     val locationPermissionState = rememberMultiplePermissionsState(
         permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -323,14 +326,14 @@ fun DeviceListWithPermissionsCheck(
             }
 
             if (nfcNodeId != null) {
-                val node = devices.firstOrNull { it.device.address.equals(nfcNodeId.uppercase()) }
+                val node = wesu1Devices.firstOrNull { it.device.address.equals(nfcNodeId.uppercase()) }
                 if (node != null) {
                     onNodeSelected(node)
                 }
             } else {
                 DeviceList(
                     modifier = modifier,
-                    devices = devices,
+                    devices = wesu1Devices,
                     isLoading = isLoading,
                     pinnedDevices = pinnedDevices,
                     onPinChange = onPinChange,
@@ -626,6 +629,11 @@ fun DeviceList(
             }
         }
     }
+}
+
+private fun isWesu1Node(node: Node): Boolean {
+    return node.boardType == Boards.Model.STEVAL_WESU1 ||
+        (node.device.name?.contains("STEVAL-WESU1", ignoreCase = true) == true)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

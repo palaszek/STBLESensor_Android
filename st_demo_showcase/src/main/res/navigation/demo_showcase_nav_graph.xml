@@ -155,6 +155,9 @@
             android:id="@+id/action_demoList_to_proximityGestureRecognitionFragment"
             app:destination="@id/proximityGestureRecognitionFragment" />
         <action
+            android:id="@+id/action_demoList_to_wesuOverviewFragment"
+            app:destination="@id/wesuOverviewFragment" />
+        <action
             android:id="@+id/action_demoList_to_switchDemoFragment"
             app:destination="@id/switchDemoFragment" />
         <action
@@ -529,6 +532,14 @@
         android:id="@+id/proximityGestureRecognitionFragment"
         android:name="com.st.proximity_gesture_recognition.ProximityGestureRecognitionFragment"
         android:label="ProximityGestureRecognitionFragment">
+        <argument
+            android:name="nodeId"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/wesuOverviewFragment"
+        android:name="com.st.demo_showcase.ui.wesu.WesuOverviewFragment"
+        android:label="WesuOverviewFragment">
         <argument
             android:name="nodeId"
             app:argType="string" />
