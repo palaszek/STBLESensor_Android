@@ -95,7 +95,7 @@ private fun WesuOverviewScreen(
     accelerationViewModel: AccelerationEventViewModel
 ) {
     val accEventData by accelerationViewModel.accEventData.collectAsStateWithLifecycle()
-    val stepCount = accEventData.first.numSteps.value
+    val stepCount = accEventData.first.numSteps.value.toLong()
     val isFallDetected = accEventData.first.accEvent.any { it.value == AccelerationType.FreeFall }
     var isFallLatched by remember { mutableStateOf(false) }
     var wasFallDetected by remember { mutableStateOf(false) }
