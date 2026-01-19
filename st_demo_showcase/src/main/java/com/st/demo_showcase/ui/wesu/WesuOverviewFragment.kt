@@ -38,7 +38,6 @@ import com.st.blue_sdk.features.acceleration_event.AccelerationType
 import com.st.blue_sdk.features.acceleration_event.DetectableEventType
 import com.st.core.ARG_NODE_ID
 import com.st.demo_showcase.R
-import com.st.pedometer.PedometerViewModel
 import com.st.ui.composables.ComposableLifecycle
 import com.st.ui.theme.BlueMSTheme
 import com.st.ui.theme.LocalDimensions
@@ -47,7 +46,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class WesuOverviewFragment : Fragment() {
 
-    private val pedometerViewModel: PedometerViewModel by viewModels()
     private val accelerationViewModel: AccelerationEventViewModel by viewModels()
 
     override fun onCreateView(
@@ -65,7 +63,6 @@ class WesuOverviewFragment : Fragment() {
                     WesuOverviewScreen(
                         modifier = Modifier.fillMaxSize(),
                         nodeId = nodeId,
-                        pedometerViewModel = pedometerViewModel,
                         accelerationViewModel = accelerationViewModel
                     )
                 }
@@ -78,30 +75,37 @@ class WesuOverviewFragment : Fragment() {
 private fun WesuOverviewScreen(
     modifier: Modifier,
     nodeId: String,
-    pedometerViewModel: PedometerViewModel,
     accelerationViewModel: AccelerationEventViewModel
 ) {
-    val stepData by pedometerViewModel.stepData.collectAsStateWithLifecycle()
     val accEventData by accelerationViewModel.accEventData.collectAsStateWithLifecycle()
+    val stepCount = accEventData.first.numSteps.value
     val isFallDetected = accEventData.first.accEvent.any { it.value == AccelerationType.FreeFall }
 
     ComposableLifecycle { _, event ->
         when (event) {
             Lifecycle.Event.ON_START -> {
-                pedometerViewModel.startDemo(nodeId = nodeId)
                 accelerationViewModel.startDemo(nodeId = nodeId)
                 accelerationViewModel.setDetectableEventCommand(
                     nodeId = nodeId,
                     event = DetectableEventType.FreeFall,
                     enable = true
                 )
+                accelerationViewModel.setDetectableEventCommand(
+                    nodeId = nodeId,
+                    event = DetectableEventType.Multiple,
+                    enable = true
+                )
             }
 
             Lifecycle.Event.ON_STOP -> {
-                pedometerViewModel.stopDemo(nodeId = nodeId)
                 accelerationViewModel.setDetectableEventCommand(
                     nodeId = nodeId,
                     event = DetectableEventType.FreeFall,
+                    enable = false
+                )
+                accelerationViewModel.setDetectableEventCommand(
+                    nodeId = nodeId,
+                    event = DetectableEventType.Multiple,
                     enable = false
                 )
                 accelerationViewModel.stopDemo(nodeId = nodeId)
@@ -139,7 +143,7 @@ private fun WesuOverviewScreen(
                 Text(
                     text = stringResource(
                         id = R.string.st_wesu_overview_steps_value,
-                        stepData.first.steps.value
+                        stepCount
                     ),
                     style = MaterialTheme.typography.displaySmall,
                     color = MaterialTheme.colorScheme.primary
